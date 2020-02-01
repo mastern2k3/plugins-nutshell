@@ -49,7 +49,15 @@ Literally the only two exported members of the `"plugin"` package
 
 ---
 
-# Hazards
+# Why Though?
+
+- Separation of concerns
+- Smaller docker image layer changes
+- Required modular behavior
+
+---
+
+# Gotchas
 
 - Plugin code must be compiled against the same go version as the host code
 - That includes the standard library and shared dependencies
@@ -57,21 +65,71 @@ Literally the only two exported members of the `"plugin"` package
 
 ---
 
+# Good Practices
+
+- Registration method
+- Plugin builder images reflecting plugin host versions
+
+---
+
+<style scoped>
+pre { margin: auto 0; font-size: 0.6em }
+section { text-align: start; }
+</style>
+
+## Good Practices
+Registration method
+
+```go
+// host.go
+
+func main() error {
+
+}
+```
+
+```go
+// plugin.go
+
+func Register(initializer host.Initializer, logger *log.Logger) error {
+    // do things with initializer
+}
+```
 
 <!--
     Example 2
     Show an example of a folder being scanned and register fun best practice
 -->
 
-
-# Benefits
-
-- Separation of concerns
-- Smaller docker image layer changes
-
 ---
 
-# Good Practices
+<style scoped>
+pre { margin: auto 0; font-size: 0.6em }
+section { text-align: start; }
+</style>
 
--  initialization method
+## Good Practices
+Plugin builder images reflecting plugin host versions
 
+```dockerfile
+# plugin builder Dockerfile
+
+FROM golang:1.13.7-buster as builder
+
+ENTRYPOINT ["go", "build", "-buildmode=plugin"]
+```
+
+```dockerfile
+# host Dockerfile
+
+FROM golang:1.13.7-buster
+
+RUN mkdir /app/plugins
+
+ENTRYPOINT ["app", "--plugins", "/app/plugins"]
+```
+
+<!--
+    Example 2
+    Show an example of a folder being scanned and register fun best practice
+-->
