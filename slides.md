@@ -14,7 +14,7 @@ by @nitzanzada
 
 ---
 
-# What?
+# What for?
 
 Load compiled go binaries and symbols at runtime
 
@@ -36,6 +36,8 @@ func Open(path string) (*Plugin, error)
 func (p *Plugin) Lookup(symName string) (Symbol, error)
 ```
 
+Literally the only two exported members of the `"plugin"` package
+
 ---
 
 # How?
@@ -47,10 +49,11 @@ func (p *Plugin) Lookup(symName string) (Symbol, error)
 
 ---
 
-<style scoped>
-section, ul, ol { text-align: start; margin: 0 auto auto 0; }
-pre { width: 100%; }
-</style>
+# Hazards
+
+- Plugin code must be compiled against the same go version as the host code
+- That includes the standard library and shared dependencies
+- No way to unload loaded binaries
 
 ---
 
